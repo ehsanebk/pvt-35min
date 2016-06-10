@@ -1,8 +1,8 @@
 /**
  * @author Ehsan Khosroshahi
- * Experiment : Paired associate
+ * Experiment : 35 min pvt test
  * Test Version 1
- * Block 1 (30 trials)
+ * 340 trials 
  * 
  *
  */
@@ -18,6 +18,7 @@ import java.util.Random;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
+import org.apache.commons.lang3.time.StopWatch;
 
 
 //5230 *key Pressed* =J		1
@@ -29,7 +30,7 @@ import java.io.IOException;
 public class PVT35 extends JFrame implements KeyListener{
 
 	JLabel num;
-	JButton button;
+	JButton startButton;
 	JTextField tf;
 	JPanel buttonPanel;
 	Random random;
@@ -41,14 +42,15 @@ public class PVT35 extends JFrame implements KeyListener{
 	long startTime;
 	
 	// constant variables
-	String FILE_NAME = "./Paired_Block1_take2.txt";  // writing to a file for each participant
+	String FILE_NAME = "./reactionTimes.txt";  // writing to a file for each participant
 	static final int TIME_BETWEEN_STUDY_AND_PROBE  = 6000;  
 	static final int NUMBER_OF_N_BACK_STIMULI = 8;
 	
 	boolean append_to_file  = false;
 	FileWriter write; 
-	PrintWriter print_line; 
-
+	PrintWriter print_line;
+	
+	private StopWatch stopWatch;
 	
 	public PVT35() {
 
@@ -68,6 +70,8 @@ public class PVT35 extends JFrame implements KeyListener{
 			setExtendedState(Frame.MAXIMIZED_BOTH);
 			setUndecorated(true);
 		}
+		
+		stopWatch = new StopWatch();
 
 		addKeyListener(this);
 		setFocusable(true);
@@ -77,11 +81,11 @@ public class PVT35 extends JFrame implements KeyListener{
 
 		buttonPanel = new JPanel();
 
-		button = new JButton("Start");
-		button.setPreferredSize(new Dimension(200, 50));
-		button.setBackground(Color.red);
+		startButton = new JButton("Start");
+		startButton.setPreferredSize(new Dimension(200, 50));
+		startButton.setBackground(Color.red);
 		// button.setOpaque(true);
-		buttonPanel.add(button, BorderLayout.NORTH);
+		buttonPanel.add(startButton, BorderLayout.NORTH);
 		add(buttonPanel);
 
 		add(new Convas());
@@ -106,7 +110,7 @@ public class PVT35 extends JFrame implements KeyListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		event e = new event();
-		button.addActionListener(e);
+		startButton.addActionListener(e);
 
 		random = new Random();
 
@@ -137,13 +141,13 @@ public class PVT35 extends JFrame implements KeyListener{
 	public class event implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			button.setVisible(false);
+			startButton.setVisible(false);
 			startTime = System.currentTimeMillis();
 
 			// starting the trials Trial 
 			trial_number = 0;
 			// starting the experiment after 1 second of clicking the strat bottom
-			stimulusAtTime_fixation(1000); 
+			stopWatchAtTime(1000); 
 		}
 	}
 
@@ -167,21 +171,23 @@ public class PVT35 extends JFrame implements KeyListener{
 
 	}
 
-	public void stimulusAtTime_fixation(int t){
+	public void stopWatchAtTime(int t){
 
 		print_line.flush();
-		if (trial_number >=30){
+		if (trial_number >=340){
 			num.setText("END");	
 		}
 		else{
 			stimulusTimer = new Timer(t, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					num.setText("<html>"+"*"+"</html>");
+					stopWatch.start();
+					
+					num.setText("<html>"+"test"+"</html>");
 					// writing to file:
 					long endTime   = System.currentTimeMillis();
-					long totalTime = endTime - startTime;
-					print_line.println(totalTime + "\t" + "Fixation "+ "test");
+					long reactionTime = endTime - startTime;
+					print_line.println(reactionTime + "\t" + "Fixation "+ "test");
 
 					stimulusAtTime_study(2000);
 				}
@@ -299,7 +305,7 @@ public class PVT35 extends JFrame implements KeyListener{
 		} 
 
 		trial_number++; // end of a trial:  adding 1 to the number of trials and going back to the fixation 
-		stimulusAtTime_fixation(t);
+		stopWatchAtTime(t);
 
 	}
 
