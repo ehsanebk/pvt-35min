@@ -1,6 +1,0 @@
-1063	Fixation test
-3077	Study --> test-test
-9083	Warning --> +
-15094	PROBE = test
-21204	Feed Back = test
-22529	*key Pressed* =⎋
