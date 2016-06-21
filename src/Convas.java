@@ -12,7 +12,6 @@ public class Convas extends JPanel {
 		this.color = Color.black;
 		
 	}
-	
 	public void paintComponent(Graphics g) {
 		int width = getWidth();
 		int height = getHeight();
