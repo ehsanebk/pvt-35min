@@ -30,6 +30,7 @@ public class PVT35 extends JFrame implements KeyListener{
 	Timer stimulusTimer;
 	Timer stopWatchCount;
 	long startTime;
+	long trailAtTime;
 	
 	// constant variables
 	Calendar cal = Calendar.getInstance();
@@ -114,14 +115,15 @@ public class PVT35 extends JFrame implements KeyListener{
 			e1.printStackTrace();
 		}
 		print_line = new PrintWriter(write);
-		
+		print_line.println(String.format("%-4s %-4s %s","trial","\t"+"RT","\t"+"Trial Start Time" ));
 
 	}
 
+	// event handler for the start button
 	public class startEvent implements ActionListener {
-
 		public void actionPerformed(ActionEvent e) {
-			startButton.setVisible(false); 
+			startButton.setVisible(false);
+			startTime = System.currentTimeMillis();
 			trial_number = 0;// starting the trials Trial
 			stopWatchAtTime(1000);// starting the experiment after 1 second of clicking the start bottom
 			stopWatchCount = new Timer(HUNDREDTH_SEC, new stopWatchCounter());
@@ -145,8 +147,8 @@ public class PVT35 extends JFrame implements KeyListener{
 			public void actionPerformed(ActionEvent arg0) {
 				stopWatch.start();
 				stopWatchCount.start();
-				startTime = System.currentTimeMillis();
 				trial_number++;
+				trailAtTime = System.currentTimeMillis() - startTime;
 			}
 		});
 		stimulusTimer.setRepeats(false); // Only execute once
@@ -161,9 +163,7 @@ public class PVT35 extends JFrame implements KeyListener{
 			stopWatch.stop();
 			stopWatchCount.stop();
 			//String r = KeyEvent.getKeyText(e.getKeyCode());
-			long endTime   = System.currentTimeMillis();
-			long totalTime = endTime - startTime;
-			print_line.println(trial_number + "\t"+ stopWatch.getTime());
+			print_line.println(String.format("%-4s %-4s %s" ,trial_number,"\t"+stopWatch.getTime(),"\t"+trailAtTime));
 			
 			// clearing the screen after 500 ml and run a trial after random 2-10 sec
 			Timer clearStopWatch = new Timer(500, new ActionListener() {
