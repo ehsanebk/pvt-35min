@@ -144,7 +144,6 @@ public class PVT35 extends JFrame implements KeyListener{
 			stopWatchAtTime(1000);// starting the experiment after 1 second of clicking the start bottom
 			stopWatchCount = new Timer(HUNDREDTH_SEC, new stopWatchCounter());
 			stopWatchCount.setRepeats(true);
-			System.out.println(nameInput.getText());
 		}
 	}
 	
