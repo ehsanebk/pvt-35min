@@ -14,16 +14,17 @@ import java.util.Random;
 import java.util.Calendar;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.io.IOException;
 import org.apache.commons.lang3.time.StopWatch;
 
 public class PVT35 extends JFrame implements KeyListener{
 
 	JLabel num;
+	JLabel nameLabel;
+	JTextField nameInput;
 	JButton startButton;
 	JPanel buttonPanel;
+	JPanel namePanel;
 	Random random;
 	
 	int trial_number;
@@ -34,11 +35,12 @@ public class PVT35 extends JFrame implements KeyListener{
 	
 	// constant variables
 	Calendar cal = Calendar.getInstance();
-	String FILE_NAME = "./reactionTimes "+ cal.getTime();  // writing to a file for each participant
+	String FILE_NAME;  // writing to a file for each participant
 	public static final int ONE_SEC = 1000;   //time step in milliseconds
 	public static final int TENTH_SEC = 100;
 	public static final int HUNDREDTH_SEC = 10;
 	public static final int MILLISEC = 1;
+	public static final int TOTAL_NUMBER_OF_TRIALS = 340;
 	
 	boolean append_to_file  = false;
 	FileWriter write; 
@@ -76,29 +78,36 @@ public class PVT35 extends JFrame implements KeyListener{
 		buttonPanel = new JPanel();
 
 		startButton = new JButton("Start");
-		startButton.setPreferredSize(new Dimension(200, 50));
+		startButton.setFont(new Font("Arial Bold", Font.PLAIN, 40));
 		startButton.setBackground(Color.red);
 		// button.setOpaque(true);
 		buttonPanel.add(startButton, BorderLayout.NORTH);
 		add(buttonPanel);
 
+		namePanel = new JPanel();
+		
+		nameLabel = new JLabel("Please write your name:");
+		nameLabel.setFont(new Font("Arial Bold", Font.PLAIN, 30));
+		namePanel.add(nameLabel, BorderLayout.NORTH);
+		nameInput = new JTextField(15);
+		nameInput.setFont(new Font("Arial Bold", Font.PLAIN, 30));
+		namePanel.add(nameInput, BorderLayout.NORTH);
+		add(namePanel);
+		
 		add(new Convas());
 		add(new Convas());
-		add(new Convas());
-
+		
 		num = new JLabel();
 		num.setFont(new Font("Arial Bold", Font.PLAIN, 80));
-		
 		num.setForeground(Color.black);
 		num.setHorizontalAlignment(SwingConstants.CENTER);
 		num.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 		add(num);
-
+		
 		add(new Convas());
 		add(new Convas());
 		add(new Convas());
-		add(new Convas());
-
+		
 		setSize(900, 600);
 
 		setVisible(true);
@@ -109,26 +118,33 @@ public class PVT35 extends JFrame implements KeyListener{
 
 		random = new Random();
 
-		try {
-			write = new FileWriter(FILE_NAME, append_to_file);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		print_line = new PrintWriter(write);
-		print_line.println(String.format("%-4s %-4s %s","trial","\t"+"RT","\t"+"Trial Start Time" ));
+		
 
 	}
 
 	// event handler for the start button
 	public class startEvent implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			startButton.setVisible(false);
 			startTime = System.currentTimeMillis();
+			startButton.setVisible(false);
+			nameInput.setVisible(false);
+			nameLabel.setVisible(false);
+
+			 FILE_NAME = nameInput.getText() + " " + cal.getTime();
+			// output file
+			try {
+				write = new FileWriter(FILE_NAME, append_to_file);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			print_line = new PrintWriter(write);
+			print_line.println(String.format("%-4s %-4s %s","trial","\t"+"RT","\t"+"Trial Start Time" ));
+			
 			trial_number = 0;// starting the trials Trial
 			stopWatchAtTime(1000);// starting the experiment after 1 second of clicking the start bottom
 			stopWatchCount = new Timer(HUNDREDTH_SEC, new stopWatchCounter());
 			stopWatchCount.setRepeats(true);
-			
+			System.out.println(nameInput.getText());
 		}
 	}
 	
@@ -171,7 +187,10 @@ public class PVT35 extends JFrame implements KeyListener{
 				public void actionPerformed(ActionEvent arg0) {
 					stopWatch.reset();
 					num.setText("");
-					stopWatchAtTime(randomInteger(2, 10, random)*1000);
+					if (trial_number>=TOTAL_NUMBER_OF_TRIALS){
+						num.setText("END");
+					}else
+						stopWatchAtTime(randomInteger(2, 10, random)*1000);
 				}
 			});
 			clearStopWatch.setRepeats(false); // Only execute once
@@ -207,8 +226,5 @@ public class PVT35 extends JFrame implements KeyListener{
 		PVT35 environment = new PVT35();
 		environment.setExtendedState(Frame.MAXIMIZED_BOTH);
 		environment.setBackground(Color.gray);
-
 	}
-
-
 }
