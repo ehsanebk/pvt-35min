@@ -14,6 +14,8 @@ import java.util.Random;
 import java.util.Calendar;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.io.IOException;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -130,7 +132,9 @@ public class PVT35 extends JFrame implements KeyListener{
 			nameInput.setVisible(false);
 			nameLabel.setVisible(false);
 
-			 FILE_NAME = nameInput.getText() + " " + cal.getTime();
+			DateFormat dateFormat = new SimpleDateFormat("[HH,mm,ss]MMM_dd(yyyy)");
+			
+			FILE_NAME = nameInput.getText() + "@" + dateFormat.format(cal.getTime());
 			// output file
 			try {
 				write = new FileWriter(FILE_NAME, append_to_file);
