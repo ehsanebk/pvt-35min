@@ -10,14 +10,16 @@ public class Convas extends JPanel {
 	public Convas () {
 		
 		this.color = Color.black;
-		
+		this.setOpaque(true);
+		this.setBackground(Color.black);
 	}
-	public void paintComponent(Graphics g) {
-		int width = getWidth();
-		int height = getHeight();
+//	public void paintComponent(Graphics g) {
+//		int width = getWidth();
+//		int height = getHeight();
 //		g.setColor(Color.black);
-//		g.drawOval(0, 0, width, height);
-//		g.drawString("3", 200,200);
-	}
+//		
+////		g.drawOval(0, 0, width, height);
+////		g.drawString("3", 200,200);
+//	}
 
 }
